@@ -35,7 +35,8 @@ public class BalancerToolbar {
 			List<BalancerDTO> list = new ArrayList<BalancerDTO>();
 			BalancerToolbar hce = new BalancerToolbar();
 			
-//			Integer loged = 0;
+			String locationToolbarServer = "";
+			Integer logged = 0;
 		
             Integer sum2   = hce.getSumUserServer("http://10.33.4.110:7641/api/provider/usersLogged", 
             		"{\"idTypeMessage\":59,\"message\":\"{\\\"ipAddress\\\":\\\"\\\",\\\"port\\\":0,\\\"lineActive\\\":1,\\\"onlineProcessing\\\":true}\"}",
@@ -54,28 +55,38 @@ public class BalancerToolbar {
             		"10.33.4.110:9782");
             
 
-//            balancerDTO = new BalancerDTO(2, sum2, "C:\\Callink\\TOOLBAR_PROD\\TOOLBAR_NET_02");
-//            list.add(balancerDTO);
-//            
-//            balancerDTO = new BalancerDTO(3, sum3, "C:\\Callink\\TOOLBAR_PROD\\TOOLBAR_NET_03");
-//            list.add(balancerDTO);
-//            
-//            balancerDTO = new BalancerDTO(4, sum4, "C:\\Callink\\TOOLBAR_PROD\\TOOLBAR_NET_04");
-//            list.add(balancerDTO);
-//            
-//            balancerDTO = new BalancerDTO(5, sum5, "C:\\Callink\\TOOLBAR_PROD\\TOOLBAR_NET_05");
-//            list.add(balancerDTO);
-//            
-//            for(BalancerDTO dto: list) {
-//            	
-//            }
+            balancerDTO = new BalancerDTO(2, sum2, "C:\\Callink\\TOOLBAR_PROD\\TOOLBAR_NET_02");
+            list.add(balancerDTO);
+            
+            balancerDTO = new BalancerDTO(3, sum3, "C:\\Callink\\TOOLBAR_PROD\\TOOLBAR_NET_03");
+            list.add(balancerDTO);
+            
+            balancerDTO = new BalancerDTO(4, sum4, "C:\\Callink\\TOOLBAR_PROD\\TOOLBAR_NET_04");
+            list.add(balancerDTO);
+            
+            balancerDTO = new BalancerDTO(5, sum5, "C:\\Callink\\TOOLBAR_PROD\\TOOLBAR_NET_05");
+            list.add(balancerDTO);
+            
+            for(BalancerDTO dto: list) {
+            	if(logged == 0) {
+            		logged = dto.getSum();
+            		locationToolbarServer = dto.getDiretorioClientToolbar();
+            		continue;
+            	}
+            	
+            	if(dto.getSum() < logged) {
+            		logged = dto.getSum();
+            		locationToolbarServer = dto.getDiretorioClientToolbar();
+            	}
+            }
             
             System.out.println("Server 2: " + sum2);
             System.out.println("Server 3: " + sum3);
             System.out.println("Server 4: " + sum4);
             System.out.println("Server 5: " + sum5);
-            
+//            
             System.out.println("Total: " + (sum2 + sum3 + sum4 + sum5));
+            System.out.println("Redirecionar -> " + locationToolbarServer);
             
         } catch(IOException ioe) {
             ioe.printStackTrace();
@@ -85,6 +96,8 @@ public class BalancerToolbar {
 	private Integer getSumUserServer(String postUrl, String data, String toolbalServer) throws IOException, JSONException {
 		
         String body = this.post(postUrl, data);
+        
+        System.out.println("postUrl: " + postUrl + "\n body: " + body);
         
         JSONObject jsonBody = new JSONObject(body);
         JSONObject jsonMessage = new JSONObject(jsonBody.getString("message"));
@@ -97,6 +110,7 @@ public class BalancerToolbar {
 	
 	 public String post(String postUrl, String data) throws IOException {
 	        URL url = new URL(postUrl);
+	        System.out.println("URL" + postUrl);
 	        HttpURLConnection con = (HttpURLConnection) url.openConnection();
 	        con.setRequestProperty("Content-Type", "application/json; charset=utf-8");
 	        con.setRequestMethod("POST");
