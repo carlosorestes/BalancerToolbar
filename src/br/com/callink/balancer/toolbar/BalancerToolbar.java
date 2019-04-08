@@ -8,6 +8,7 @@ import java.io.Closeable;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -35,7 +36,28 @@ public class BalancerToolbar {
 		BalancerDTO balancerDTO;	
 		try {
 			
-			getPropertiesName();
+			String filename = "";
+			File folder = new File("toolbarProperties");
+			File[] listOfFiles = folder.listFiles();
+			Properties props;
+			String server;
+			String serverData;
+			String client;
+			String clientInstall;
+
+			if (listOfFiles.length > 0) {
+				for (int i = 0; i < listOfFiles.length; i++) {
+					if (listOfFiles[i].isFile()) {
+						props = new Properties();
+						props = readProperties(listOfFiles[i].getName());
+						server = props.getProperty("prop.toolbar.server");
+						serverData = props.getProperty("prop.toolbar.server.data");
+						client = props.getProperty("prop.toolbar.client");
+						clientInstall = props.getProperty("prop.toolbar.client.install");
+						
+					}
+				}
+			}
 			
 			List<BalancerDTO> list = new ArrayList<BalancerDTO>();
 			BalancerToolbar hce = new BalancerToolbar();
@@ -98,20 +120,13 @@ public class BalancerToolbar {
         } catch(IOException ioe) {
             ioe.printStackTrace();
         }
-	}
+	}	
 	
-	public static String getPropertiesName() {
-		File folder = new File("toolbarProperties");
-		File[] listOfFiles = folder.listFiles();
-
-		for (int i = 0; i < listOfFiles.length; i++) {
-		  if (listOfFiles[i].isFile()) {
-		    System.out.println("File " + listOfFiles[i].getName());
-		  } else if (listOfFiles[i].isDirectory()) {
-		    System.out.println("Directory " + listOfFiles[i].getName());
-		  }
-		}
-		return "";
+	public static Properties readProperties(String fileName) throws IOException {
+		Properties props = new Properties();
+		FileInputStream file = new FileInputStream("toolbarProperties\\" + fileName);
+        props.load(file);
+		return props;
 	}
 	
 	public static Properties getProp() throws IOException {
