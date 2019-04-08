@@ -6,6 +6,8 @@ package br.com.callink.balancer.toolbar;
 import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -13,6 +15,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,15 +32,19 @@ public class BalancerToolbar {
 	 * @throws JSONException 
 	 */
 	public static void main(String[] args) throws JSONException {
-		BalancerDTO balancerDTO;
+		BalancerDTO balancerDTO;	
 		try {
+			
+			getPropertiesName();
 			
 			List<BalancerDTO> list = new ArrayList<BalancerDTO>();
 			BalancerToolbar hce = new BalancerToolbar();
 			
 			String locationToolbarServer = "";
 			Integer logged = 0;
-		
+			
+			
+			
             Integer sum2   = hce.getSumUserServer("http://10.33.4.110:7641/api/provider/usersLogged", 
             		"{\"idTypeMessage\":59,\"message\":\"{\\\"ipAddress\\\":\\\"\\\",\\\"port\\\":0,\\\"lineActive\\\":1,\\\"onlineProcessing\\\":true}\"}",
             		"10.33.4.110:9496");
@@ -91,6 +98,33 @@ public class BalancerToolbar {
         } catch(IOException ioe) {
             ioe.printStackTrace();
         }
+	}
+	
+	public static String getPropertiesName() {
+		File folder = new File("toolbarProperties");
+		File[] listOfFiles = folder.listFiles();
+
+		for (int i = 0; i < listOfFiles.length; i++) {
+		  if (listOfFiles[i].isFile()) {
+		    System.out.println("File " + listOfFiles[i].getName());
+		  } else if (listOfFiles[i].isDirectory()) {
+		    System.out.println("Directory " + listOfFiles[i].getName());
+		  }
+		}
+		return "";
+	}
+	
+	public static Properties getProp() throws IOException {
+        Properties props = new Properties();
+        FileInputStream file = new FileInputStream(
+                "balancer.properties");
+        props.load(file);
+        return props;
+    }
+	
+	public static String getValueProperties(String key) throws IOException {
+		Properties prop = getProp();
+		return prop.getProperty(key);
 	}
 	
 	private Integer getSumUserServer(String postUrl, String data, String toolbalServer) throws IOException, JSONException {
