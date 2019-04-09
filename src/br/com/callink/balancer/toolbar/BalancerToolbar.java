@@ -67,35 +67,35 @@ public class BalancerToolbar {
 			
 			
 			
-            Integer sum2   = hce.getSumUserServer("http://10.33.4.110:7641/api/provider/usersLogged", 
+            Integer sum2   = hce.getSumUserServer("https://balancer-toolbar-server.herokuapp.com/api/serverONe", 
             		"{\"idTypeMessage\":59,\"message\":\"{\\\"ipAddress\\\":\\\"\\\",\\\"port\\\":0,\\\"lineActive\\\":1,\\\"onlineProcessing\\\":true}\"}",
             		"10.33.4.110:9496");
              
-            Integer sum3   = hce.getSumUserServer("http://10.33.4.110:7642/api/provider/usersLogged", 
-            		"{\"idTypeMessage\":59,\"message\":\"{\\\"ipAddress\\\":\\\"\\\",\\\"port\\\":0,\\\"lineActive\\\":1,\\\"onlineProcessing\\\":true}\"}",
-            		"10.33.4.110:9500");
-            
-            Integer sum4   = hce.getSumUserServer("http://10.33.4.110:7643/api/provider/usersLogged", 
-            		"{\"idTypeMessage\":59,\"message\":\"{\\\"ipAddress\\\":\\\"\\\",\\\"port\\\":0,\\\"lineActive\\\":1,\\\"onlineProcessing\\\":true}\"}",
-            		"10.33.4.110:9780");
-            
-            Integer sum5   = hce.getSumUserServer("http://10.33.4.110:7644/api/provider/usersLogged", 
-            		"{\"idTypeMessage\":59,\"message\":\"{\\\"ipAddress\\\":\\\"\\\",\\\"port\\\":0,\\\"lineActive\\\":1,\\\"onlineProcessing\\\":true}\"}",
-            		"10.33.4.110:9782");
+//            Integer sum3   = hce.getSumUserServer("http://10.33.4.110:7642/api/provider/usersLogged", 
+//            		"{\"idTypeMessage\":59,\"message\":\"{\\\"ipAddress\\\":\\\"\\\",\\\"port\\\":0,\\\"lineActive\\\":1,\\\"onlineProcessing\\\":true}\"}",
+//            		"10.33.4.110:9500");
+//            
+//            Integer sum4   = hce.getSumUserServer("http://10.33.4.110:7643/api/provider/usersLogged", 
+//            		"{\"idTypeMessage\":59,\"message\":\"{\\\"ipAddress\\\":\\\"\\\",\\\"port\\\":0,\\\"lineActive\\\":1,\\\"onlineProcessing\\\":true}\"}",
+//            		"10.33.4.110:9780");
+//            
+//            Integer sum5   = hce.getSumUserServer("http://10.33.4.110:7644/api/provider/usersLogged", 
+//            		"{\"idTypeMessage\":59,\"message\":\"{\\\"ipAddress\\\":\\\"\\\",\\\"port\\\":0,\\\"lineActive\\\":1,\\\"onlineProcessing\\\":true}\"}",
+//            		"10.33.4.110:9782");
             
 
             balancerDTO = new BalancerDTO(2, sum2, "C:\\Callink\\TOOLBAR_PROD\\TOOLBAR_NET_02");
             list.add(balancerDTO);
             
-            balancerDTO = new BalancerDTO(3, sum3, "C:\\Callink\\TOOLBAR_PROD\\TOOLBAR_NET_03");
-            list.add(balancerDTO);
-            
-            balancerDTO = new BalancerDTO(4, sum4, "C:\\Callink\\TOOLBAR_PROD\\TOOLBAR_NET_04");
-            list.add(balancerDTO);
-            
-            balancerDTO = new BalancerDTO(5, sum5, "C:\\Callink\\TOOLBAR_PROD\\TOOLBAR_NET_05");
-            list.add(balancerDTO);
-            
+//            balancerDTO = new BalancerDTO(3, sum3, "C:\\Callink\\TOOLBAR_PROD\\TOOLBAR_NET_03");
+//            list.add(balancerDTO);
+//            
+//            balancerDTO = new BalancerDTO(4, sum4, "C:\\Callink\\TOOLBAR_PROD\\TOOLBAR_NET_04");
+//            list.add(balancerDTO);
+//            
+//            balancerDTO = new BalancerDTO(5, sum5, "C:\\Callink\\TOOLBAR_PROD\\TOOLBAR_NET_05");
+//            list.add(balancerDTO);
+//            
             for(BalancerDTO dto: list) {
             	if(logged == 0) {
             		logged = dto.getSum();
@@ -110,12 +110,12 @@ public class BalancerToolbar {
             }
             
             System.out.println("Server 2: " + sum2);
-            System.out.println("Server 3: " + sum3);
-            System.out.println("Server 4: " + sum4);
-            System.out.println("Server 5: " + sum5);
-//            
-            System.out.println("Total: " + (sum2 + sum3 + sum4 + sum5));
-            System.out.println("Redirecionar -> " + locationToolbarServer);
+//            System.out.println("Server 3: " + sum3);
+//            System.out.println("Server 4: " + sum4);
+//            System.out.println("Server 5: " + sum5);
+////            
+//            System.out.println("Total: " + (sum2 + sum3 + sum4 + sum5));
+//            System.out.println("Redirecionar -> " + locationToolbarServer);
             
         } catch(IOException ioe) {
             ioe.printStackTrace();
@@ -124,7 +124,7 @@ public class BalancerToolbar {
 	
 	public static Properties readProperties(String fileName) throws IOException {
 		Properties props = new Properties();
-		FileInputStream file = new FileInputStream("toolbarProperties\\" + fileName);
+		FileInputStream file = new FileInputStream("toolbarProperties//" + fileName);
         props.load(file);
 		return props;
 	}
