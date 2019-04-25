@@ -36,6 +36,9 @@ public class BalancerToolbar {
 		BalancerDTO balancerDTO;	
 		try {
 			
+			List<BalancerDTO> list = new ArrayList<BalancerDTO>();
+			BalancerToolbar hce = new BalancerToolbar();
+			
 			String filename = "";
 			File folder = new File("toolbarProperties");
 			File[] listOfFiles = folder.listFiles();
@@ -48,6 +51,7 @@ public class BalancerToolbar {
 			if (listOfFiles.length > 0) {
 				for (int i = 0; i < listOfFiles.length; i++) {
 					if (listOfFiles[i].isFile()) {
+						
 						props = new Properties();
 						props = readProperties(listOfFiles[i].getName());
 						server = props.getProperty("prop.toolbar.server");
@@ -55,48 +59,28 @@ public class BalancerToolbar {
 						client = props.getProperty("prop.toolbar.client");
 						clientInstall = props.getProperty("prop.toolbar.client.install");
 						
+						Integer sum   = hce.getSumUserServer(server, 
+								serverData,
+								client);
+						
+						balancerDTO = new BalancerDTO(i, sum, clientInstall, server);
+			            list.add(balancerDTO);
+						
 					}
 				}
 			}
 			
-			List<BalancerDTO> list = new ArrayList<BalancerDTO>();
-			BalancerToolbar hce = new BalancerToolbar();
 			
 			String locationToolbarServer = "";
 			Integer logged = 0;
-			
-			
-			
-            Integer sum2   = hce.getSumUserServer("https://balancer-toolbar-server.herokuapp.com/api/serverONe", 
-            		"{\"idTypeMessage\":59,\"message\":\"{\\\"ipAddress\\\":\\\"\\\",\\\"port\\\":0,\\\"lineActive\\\":1,\\\"onlineProcessing\\\":true}\"}",
-            		"10.33.4.110:9496");
-             
-//            Integer sum3   = hce.getSumUserServer("http://10.33.4.110:7642/api/provider/usersLogged", 
-//            		"{\"idTypeMessage\":59,\"message\":\"{\\\"ipAddress\\\":\\\"\\\",\\\"port\\\":0,\\\"lineActive\\\":1,\\\"onlineProcessing\\\":true}\"}",
-//            		"10.33.4.110:9500");
-//            
-//            Integer sum4   = hce.getSumUserServer("http://10.33.4.110:7643/api/provider/usersLogged", 
-//            		"{\"idTypeMessage\":59,\"message\":\"{\\\"ipAddress\\\":\\\"\\\",\\\"port\\\":0,\\\"lineActive\\\":1,\\\"onlineProcessing\\\":true}\"}",
-//            		"10.33.4.110:9780");
-//            
-//            Integer sum5   = hce.getSumUserServer("http://10.33.4.110:7644/api/provider/usersLogged", 
-//            		"{\"idTypeMessage\":59,\"message\":\"{\\\"ipAddress\\\":\\\"\\\",\\\"port\\\":0,\\\"lineActive\\\":1,\\\"onlineProcessing\\\":true}\"}",
-//            		"10.33.4.110:9782");
-            
-
-            balancerDTO = new BalancerDTO(2, sum2, "C:\\Callink\\TOOLBAR_PROD\\TOOLBAR_NET_02");
-            list.add(balancerDTO);
-            
-//            balancerDTO = new BalancerDTO(3, sum3, "C:\\Callink\\TOOLBAR_PROD\\TOOLBAR_NET_03");
-//            list.add(balancerDTO);
-//            
-//            balancerDTO = new BalancerDTO(4, sum4, "C:\\Callink\\TOOLBAR_PROD\\TOOLBAR_NET_04");
-//            list.add(balancerDTO);
-//            
-//            balancerDTO = new BalancerDTO(5, sum5, "C:\\Callink\\TOOLBAR_PROD\\TOOLBAR_NET_05");
-//            list.add(balancerDTO);
-//            
+			Integer sum = 0;
+			            
             for(BalancerDTO dto: list) {
+            	
+            	sum = sum + dto.getSum();
+            	
+//            	System.out.println("URL: " + dto.getServer() + " - " + dto.getSum());
+            	
             	if(logged == 0) {
             		logged = dto.getSum();
             		locationToolbarServer = dto.getDiretorioClientToolbar();
@@ -107,15 +91,12 @@ public class BalancerToolbar {
             		logged = dto.getSum();
             		locationToolbarServer = dto.getDiretorioClientToolbar();
             	}
+            	
             }
             
-            System.out.println("Server 2: " + sum2);
-//            System.out.println("Server 3: " + sum3);
-//            System.out.println("Server 4: " + sum4);
-//            System.out.println("Server 5: " + sum5);
-////            
-//            System.out.println("Total: " + (sum2 + sum3 + sum4 + sum5));
-//            System.out.println("Redirecionar -> " + locationToolbarServer);
+
+//            System.out.println("Total: " + sum.toString());
+            System.out.println(locationToolbarServer);
             
         } catch(IOException ioe) {
             ioe.printStackTrace();
@@ -144,31 +125,36 @@ public class BalancerToolbar {
 	
 	private Integer getSumUserServer(String postUrl, String data, String toolbalServer) throws IOException, JSONException {
 		
+		JSONArray jsonArray = new JSONArray();
         String body = this.post(postUrl, data);
         
-        System.out.println("postUrl: " + postUrl + "\n body: " + body);
-        
-        JSONObject jsonBody = new JSONObject(body);
-        JSONObject jsonMessage = new JSONObject(jsonBody.getString("message"));
-        JSONObject jsonServerOnline = new JSONObject(jsonMessage.getString("ipPortUserId"));
-        List<String> list = new ArrayList<String>();
-        JSONArray jsonArray = jsonServerOnline.getJSONArray(toolbalServer);
-		
+        if(!body.isEmpty() || body != null) {
+        	JSONObject jsonBody = new JSONObject(body);
+            JSONObject jsonMessage = new JSONObject(jsonBody.getString("message"));
+            JSONObject jsonServerOnline = new JSONObject(jsonMessage.getString("ipPortUserId"));
+            jsonArray = jsonServerOnline.getJSONArray(toolbalServer);
+        }
+        	
 		return jsonArray.length();
 	}
 	
 	 public String post(String postUrl, String data) throws IOException {
 	        URL url = new URL(postUrl);
-	        System.out.println("URL" + postUrl);
+	        String returnData = "";
 	        HttpURLConnection con = (HttpURLConnection) url.openConnection();
 	        con.setRequestProperty("Content-Type", "application/json; charset=utf-8");
 	        con.setRequestMethod("POST");
+	        con.setConnectTimeout(2000);
 
 	        con.setDoOutput(true);
 
 	        this.sendData(con, data);
+	        
+	        if(con.getResponseCode() == HttpURLConnection.HTTP_OK) {
+	        	returnData = this.read(con.getInputStream());
+	        }
 
-	        return this.read(con.getInputStream());
+	        return returnData;
 	    }
 
 	    protected void sendData(HttpURLConnection con, String data) throws IOException {

@@ -12,12 +12,15 @@ public class BalancerDTO {
 	private Integer idToolbar;
 	private Integer sum;
 	private String diretorioClientToolbar;
+	private String server;
 	
 	
-	public BalancerDTO(int idToolbar, Integer sum, String diretorioClientToolbar) {
+	public BalancerDTO(int idToolbar, Integer sum, String diretorioClientToolbar, String server) {
 		this.idToolbar = idToolbar;
 		this.sum = sum;
 		this.diretorioClientToolbar = diretorioClientToolbar;
+		this.server = server;
+		
 	}
 	public Integer getIdToolbar() {
 		return idToolbar;
@@ -37,4 +40,11 @@ public class BalancerDTO {
 	public void setDiretorioClientToolbar(String diretorioClientToolbar) {
 		this.diretorioClientToolbar = diretorioClientToolbar;
 	}
+	public String getServer() {
+		return server;
+	}
+	public void setServer(String server) {
+		this.server = server;
+	}
+	
 }
