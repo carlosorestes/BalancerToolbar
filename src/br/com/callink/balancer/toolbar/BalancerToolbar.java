@@ -40,14 +40,18 @@ public class BalancerToolbar {
 			BalancerToolbar hce = new BalancerToolbar();
 			
 			String filename = "";
+			
+			//Realiza leitura do diretório raiz
 			File folder = new File("toolbarProperties");
 			File[] listOfFiles = folder.listFiles();
+			
 			Properties props;
 			String server;
 			String serverData;
 			String client;
 			String clientInstall;
 
+			//Realiza leitura dos properties de cada Toolbar 
 			if (listOfFiles.length > 0) {
 				for (int i = 0; i < listOfFiles.length; i++) {
 					if (listOfFiles[i].isFile()) {
@@ -59,6 +63,7 @@ public class BalancerToolbar {
 						client = props.getProperty("prop.toolbar.client");
 						clientInstall = props.getProperty("prop.toolbar.client.install");
 						
+						//Recupera o numero de usuarios logado em cada servidor
 						Integer sum   = hce.getSumUserServer(server, 
 								serverData,
 								client);
