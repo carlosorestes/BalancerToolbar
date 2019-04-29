@@ -1,4 +1,4 @@
-package br.com.callink.balancer.toolbar;
+package br.com.callink.balancer.toolbar.solid.dto;
 
 public class PropertiesDTO {
 
@@ -6,19 +6,12 @@ public class PropertiesDTO {
 	private String serverData;
 	private String client;
 	private String clientInstall;
-	/**
-	 * @param server
-	 * @param serverData
-	 * @param client
-	 * @param clientInstall
-	 */
-	public PropertiesDTO(String server, String serverData, String client, String clientInstall) {
-		super();
-		this.server = server;
-		this.serverData = serverData;
-		this.client = client;
-		this.clientInstall = clientInstall;
-	}
+	private Plataforma plataforma;
+	private Integer sumServer;
+	
+	
+	public PropertiesDTO() {}
+	
 	/**
 	 * @return the server
 	 */
@@ -67,13 +60,33 @@ public class PropertiesDTO {
 	public void setClientInstall(String clientInstall) {
 		this.clientInstall = clientInstall;
 	}
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
+
+	/**
+	 * @return the plataforma
 	 */
-	@Override
-	public String toString() {
-		return "PropertiesDTO [server=" + server + ", serverData=" + serverData + ", client=" + client
-				+ ", clientInstall=" + clientInstall + "]";
+	public Plataforma getPlataforma() {
+		return plataforma;
+	}
+
+	/**
+	 * @param plataforma the plataforma to set
+	 */
+	public void setPlataforma(Plataforma plataforma) {
+		this.plataforma = plataforma;
+	}
+
+	/**
+	 * @return the sumServer
+	 */
+	public Integer getSumServer() {
+		return sumServer;
+	}
+
+	/**
+	 * @param sumServer the sumServer to set
+	 */
+	public void setSumServer(Integer sumServer) {
+		this.sumServer = sumServer;
 	}
 	
 }
