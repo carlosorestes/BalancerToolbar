@@ -15,6 +15,7 @@ public class ServerServiceImpl implements ServerService {
 
 	@Override
 	public Integer getSumUser(PropertiesDTO propertiesDTO) {
+		Integer sumUserLogged = 0;
 		try {
 			httpServerService = new HttpServerServiceImpl();
 			
@@ -24,19 +25,28 @@ public class ServerServiceImpl implements ServerService {
 			 * Metodo httpServerService.post
 			 */
 			String body = httpServerService.post(propertiesDTO);
-			jsonArray = new JSONArray();
 	        
-	        if(!body.isEmpty() || body != null) {
+	        if(!body.isEmpty() && body != null) {
+	        	jsonArray = new JSONArray();
 	        	JSONObject jsonBody = new JSONObject(body);
 	            JSONObject jsonMessage = new JSONObject(jsonBody.getString("message"));
 	            JSONObject jsonServerOnline = new JSONObject(jsonMessage.getString("ipPortUserId"));
 	            jsonArray = jsonServerOnline.getJSONArray(propertiesDTO.getClient());
+	            sumUserLogged = jsonArray.length();
+	        } else {
+	        	sumUserLogged = -1;
 	        }
 		} catch (Exception e) {
 			logger.error("Error method getSumUser : " + propertiesDTO.toString(), e);
 		}
         	
-		return jsonArray.length();
+		return sumUserLogged;
+	}
+
+	@Override
+	public String getUserLoged() {
+		
+		return System.getProperty("user.name");
 	}
 
 }

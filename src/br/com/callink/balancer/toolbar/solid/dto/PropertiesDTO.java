@@ -1,5 +1,7 @@
 package br.com.callink.balancer.toolbar.solid.dto;
 
+import java.util.ArrayList;
+
 public class PropertiesDTO {
 
 	private String server;
@@ -8,6 +10,7 @@ public class PropertiesDTO {
 	private String clientInstall;
 	private Plataforma plataforma;
 	private Integer sumServer;
+	private ArrayList<String> listUser;
 	
 	
 	public PropertiesDTO() {}
@@ -88,5 +91,12 @@ public class PropertiesDTO {
 	public void setSumServer(Integer sumServer) {
 		this.sumServer = sumServer;
 	}
-	
+
+	public ArrayList<String> getListUser() {
+		return listUser;
+	}
+
+	public void setListUser(ArrayList<String> listUser) {
+		this.listUser = listUser;
+	}
 }

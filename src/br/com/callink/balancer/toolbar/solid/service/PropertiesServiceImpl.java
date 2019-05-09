@@ -2,6 +2,8 @@ package br.com.callink.balancer.toolbar.solid.service;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -36,11 +38,16 @@ public class PropertiesServiceImpl implements PropertiesService {
 	@Override
 	public PropertiesDTO getValue(Properties properties) {
 		propertiesDTO = new PropertiesDTO();
+		ArrayList<String> arrayUsers;
 		
 		propertiesDTO.setServer(properties.getProperty("prop.toolbar.server"));
 		propertiesDTO.setServerData(properties.getProperty("prop.toolbar.server.data"));
 		propertiesDTO.setClient(properties.getProperty("prop.toolbar.client"));
 		propertiesDTO.setClientInstall(properties.getProperty("prop.toolbar.client.install"));
+		
+		arrayUsers = new ArrayList<>(Arrays.asList(properties.getProperty("prop.toolbar.client.users").split(";")));
+		
+		propertiesDTO.setListUser(arrayUsers);
 		
 		getEnumPropertiesProcessa(properties.getProperty("prop.toolbar.client.type"), propertiesDTO);
 		

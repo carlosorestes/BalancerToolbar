@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 
 import br.com.callink.balancer.toolbar.solid.dto.PropertiesDTO;
 import br.com.callink.balancer.toolbar.solid.service.PropertiesServiceImpl;
+import br.com.callink.balancer.toolbar.solid.service.ServerServiceImpl;
 
 /**
  * @author malaquias
@@ -70,24 +71,43 @@ public class LoadBalancerApp {
 		Integer logged = 0;
 		Integer sum = 0;
 		            
-        for(PropertiesDTO dto: listProperteisDTO) { 	
-        	sum = sum + dto.getSumServer();
-       
+        for(PropertiesDTO dto: listProperteisDTO) {
+        	
         	logger.info("URL: " + dto.getServer() + " - " + dto.getSumServer());
         	
-        	if(logged == 0) {
-        		logged = dto.getSumServer();
-        		locationToolbarServer = dto.getClientInstall();
-        		continue;
+        	if (dto.getSumServer() >= 0) {
+        		
+        		if(!dto.getListUser().isEmpty() && isUserLoged(dto)) {
+        			locationToolbarServer = dto.getClientInstall();
+        			break;
+        		}
+        		
+        		sum = sum + dto.getSumServer();
+        	       
+            	if(logged == 0) {
+            		logged = dto.getSumServer();
+            		locationToolbarServer = dto.getClientInstall();
+            		continue;
+            	}
+            	
+            	if(dto.getSumServer() < logged) {
+            		logged = dto.getSumServer();
+            		locationToolbarServer = dto.getClientInstall();
+            	}
+        	} else {
+        		logger.warn("Toolbar Server Indisponivel URL: " + dto.getServer());
         	}
-        	
-        	if(dto.getSumServer() < logged) {
-        		logged = dto.getSumServer();
-        		locationToolbarServer = dto.getClientInstall();
-        	}	
         }
         
 		return locationToolbarServer;
+	}
+	
+	private Boolean isUserLoged(PropertiesDTO propertiesDTO) {
+		Boolean isLoged = false;
+		
+		isLoged = propertiesDTO.getListUser().contains(System.getProperty("user.name"));
+		
+		return isLoged;
 	}
 		
 		
